@@ -1,0 +1,23 @@
+{
+  "name": "razorpay-payment-link-order-cli-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Test Mode Razorpay e-commerce checkout and verification demo",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "cli": "node src/index.js",
+    "test": "node --test test/validation.test.js test/store.test.js",
+    "test:checkout": "node scripts/run-checkout-test.js",
+    "install:browsers": "playwright install chromium"
+  },
+  "engines": {
+    "node": ">=22.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "playwright": "^1.55.0",
+    "razorpay": "^2.9.8"
+  }
+}

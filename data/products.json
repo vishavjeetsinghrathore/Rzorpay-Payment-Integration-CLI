@@ -1,0 +1,4 @@
+[
+  { "id": "pen", "name": "Pen", "pricePaise": 200, "priceLabel": "₹2.00" },
+  { "id": "pencil", "name": "Pencil", "pricePaise": 400, "priceLabel": "₹4.00" }
+]
