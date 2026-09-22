@@ -1,0 +1,27 @@
+sequenceDiagram
+    autonumber
+    actor U as Shopper (Browser)
+    participant S as Express Server
+    participant R as Razorpay API
+
+    U->>S: GET /api/products
+    S-->>U: catalog (id, name, price)
+
+    U->>S: POST /api/orders { items }
+    Note over S: buildCart() recalculates<br/>every price server-side
+    S->>R: orders.create({ amount, currency: INR })
+    R-->>S: order { id, amount, status }
+    Note over S: cache order + cart<br/>in memory (orders Map)
+    S-->>U: { keyId, orderId, amount, items }
+
+    U->>R: Checkout.js modal opens<br/>(card, contact, OTP)
+    Note over U,R: Test Mode mock bank<br/>simulates the issuer
+    R-->>U: razorpay_payment_id,<br/>razorpay_order_id, signature
+
+    U->>S: POST /api/payments/verify { payment_id, order_id, signature }
+    Note over S: HMAC-SHA256(orderId|paymentId)<br/>timingSafeEqual vs signature
+    S->>R: payments.fetch(paymentId)
+    R-->>S: payment { status, amount, order_id, currency }
+    Note over S: check order_id, amount,<br/>currency match + status === captured
+    S-->>U: { verified: true, captured: true, ...cart }
+    U->>U: redirect to /success.html
