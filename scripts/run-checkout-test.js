@@ -4,6 +4,7 @@
  * manufactures a Razorpay response or a payment ID.
  */
 const { spawn } = require('node:child_process');
+const readline = require('node:readline/promises');
 const { chromium } = require('playwright');
 require('dotenv').config();
 
@@ -77,12 +78,13 @@ async function completeTestCardPayment(page) {
 
   // Razorpay's Test Mode can show a mock bank confirmation. Click it only
   // when it is actually rendered by Razorpay; never replace this with a mock.
-  const deadline = Date.now() + 40_000;
+  let deadline = Date.now() + 40_000;
   while (Date.now() < deadline) {
     try {
       if (await page.getByRole('heading', { name: 'Payment Success' }).isVisible().catch(() => false)) return;
       await handleContactDetailsPrompt(page);
-      if (await handleOtpPrompt(page)) { await page.waitForTimeout(300); continue; }
+      const otpWaitMs = await handleOtpPrompt(page);
+      if (otpWaitMs !== false) { deadline += otpWaitMs; await page.waitForTimeout(300); continue; }
       for (const frame of [...await candidateFrames(page), page.mainFrame()]) {
         const success = frame.getByRole('button', { name: /^success$/i });
         if (await success.isVisible().catch(() => false)) { await success.click(); continue; }
@@ -143,14 +145,31 @@ async function handleContactDetailsPrompt(page) {
   }
 }
 
+async function promptForOtp() {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    const otp = await rl.question('Enter the OTP shown in the Razorpay Test Checkout mock bank screen: ');
+    return otp.trim();
+  } finally {
+    rl.close();
+  }
+}
+
+// Returns false if no OTP prompt is showing, otherwise the number of
+// milliseconds spent waiting on the user to type the OTP (so the caller can
+// extend its own timeout budget by that much).
 async function handleOtpPrompt(page) {
   for (const frame of [...await candidateFrames(page), page.mainFrame()]) {
     const otpInput = frame.getByPlaceholder(/enter otp/i).first();
     if (!(await otpInput.isVisible().catch(() => false))) continue;
     const currentValue = await otpInput.inputValue().catch(() => '');
+    let waitedMs = 0;
     if (!currentValue) {
+      const startedAt = Date.now();
+      const otp = await promptForOtp();
+      waitedMs = Date.now() - startedAt;
       await otpInput.click();
-      await otpInput.pressSequentially('123456', { delay: 30 });
+      await otpInput.pressSequentially(otp, { delay: 30 });
     }
     const otpBox = await otpInput.boundingBox().catch(() => null);
     const target = await continueButtonBelow(frame, otpBox);
@@ -158,7 +177,7 @@ async function handleOtpPrompt(page) {
       await target.click({ timeout: 3_000 }).catch(() => target.click({ force: true }));
       await page.waitForTimeout(500);
     }
-    return true;
+    return waitedMs;
   }
   return false;
 }
