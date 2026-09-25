@@ -1,4 +1,8 @@
 [
-  { "id": "pen", "name": "Pen", "pricePaise": 200, "priceLabel": "₹2.00" },
-  { "id": "pencil", "name": "Pencil", "pricePaise": 400, "priceLabel": "₹4.00" }
+  { "id": "pen", "name": "Pen", "pricePaise": 200, "priceLabel": "₹2.00", "icon": "🖊️", "description": "Smooth-writing ballpoint pen." },
+  { "id": "pencil", "name": "Pencil", "pricePaise": 400, "priceLabel": "₹4.00", "icon": "✏️", "description": "Classic HB graphite pencil." },
+  { "id": "notebook", "name": "Notebook", "pricePaise": 8500, "priceLabel": "₹85.00", "icon": "📓", "description": "200-page ruled notebook." },
+  { "id": "eraser", "name": "Eraser", "pricePaise": 150, "priceLabel": "₹2.00", "icon": "🧹", "description": "Soft white eraser." },
+  { "id": "marker", "name": "Marker", "pricePaise": 6000, "priceLabel": "₹60.00", "icon": "🖍️", "description": "Set of 6 vibrant highlighters." },
+  { "id": "sharpener", "name": "Sharpener", "pricePaise": 250, "priceLabel": "₹4.00", "icon": "🔺", "description": "Dual-hole precision sharpener." }
 ]

@@ -3,9 +3,24 @@
   <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Test Stationery Store</title><link rel="stylesheet" href="/styles.css"></head>
   <body>
     <main>
-      <p class="badge">Razorpay Test Mode</p><h1>Test Stationery Store</h1><p>Products and totals are calculated by the server. No real money is used.</p>
+      <header class="page-header">
+        <p class="badge">Razorpay Test Mode</p>
+        <h1>Test Stationery Store</h1>
+        <p class="subtitle">Products and totals are calculated by the server. No real money is used.</p>
+      </header>
       <section id="products" class="products" aria-label="Products"></section>
-      <section class="cart"><h2>Your cart</h2><div id="cart-lines">Your cart is empty.</div><p class="total">Total: <strong id="cart-total">₹0.00</strong></p><button id="pay-button" data-testid="pay-button" disabled>Pay with Razorpay Test Checkout</button><p id="message" role="status"></p></section>
+      <section class="cart">
+        <div class="cart-header">
+          <h2>Your cart <span id="cart-count" class="cart-count" hidden>0</span></h2>
+          <button id="clear-cart" class="link-button" type="button" hidden>Clear cart</button>
+        </div>
+        <div id="cart-lines">Your cart is empty.</div>
+        <div class="cart-footer">
+          <p class="total">Total: <strong id="cart-total">₹0.00</strong></p>
+          <button id="pay-button" data-testid="pay-button" disabled>Pay with Razorpay Test Checkout</button>
+        </div>
+        <p id="message" role="status"></p>
+      </section>
     </main>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script><script src="/app.js"></script>
   </body>

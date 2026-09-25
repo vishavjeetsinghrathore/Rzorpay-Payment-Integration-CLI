@@ -2,8 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { buildCart, publicProducts } = require('../src/store');
 
-test('exposes the two hardcoded products', () => {
-  assert.deepEqual(publicProducts().map((product) => product.id), ['pen', 'pencil']);
+test('exposes the hardcoded products', () => {
+  assert.deepEqual(publicProducts().map((product) => product.id), ['pen', 'pencil', 'notebook', 'eraser', 'marker', 'sharpener']);
 });
 
 test('calculates cart quantities and total on the server', () => {
@@ -13,6 +13,6 @@ test('calculates cart quantities and total on the server', () => {
 });
 
 test('rejects unknown products and invalid quantities', () => {
-  assert.throws(() => buildCart([{ productId: 'eraser', quantity: 1 }]));
+  assert.throws(() => buildCart([{ productId: 'stapler', quantity: 1 }]));
   assert.throws(() => buildCart([{ productId: 'pen', quantity: 0 }]));
 });
